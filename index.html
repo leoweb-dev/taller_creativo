@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Taller Creativo</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="barra-superior">
+    <h1>🎨 Taller Creativo</h1>
+    <nav class="pestanas" role="tablist">
+      <button class="pestana activa" data-vista="dibujo" role="tab">🖌️ Dibujo</button>
+      <button class="pestana" data-vista="escritura" role="tab">📖 Historias</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ===================== VISTA: DIBUJO ===================== -->
+    <section id="vista-dibujo" class="vista activa">
+      <aside class="panel-herramientas">
+        <h2>Herramientas</h2>
+        <div class="grupo" id="herramientas">
+          <button class="herramienta activa" data-herramienta="pincel" title="Pincel">🖌️</button>
+          <button class="herramienta" data-herramienta="lapiz" title="Lápiz">✏️</button>
+          <button class="herramienta" data-herramienta="spray" title="Spray">💨</button>
+          <button class="herramienta" data-herramienta="borrador" title="Borrador">🧽</button>
+          <button class="herramienta" data-herramienta="relleno" title="Relleno">🪣</button>
+          <button class="herramienta" data-herramienta="linea" title="Línea">📏</button>
+          <button class="herramienta" data-herramienta="rectangulo" title="Rectángulo">⬜</button>
+          <button class="herramienta" data-herramienta="circulo" title="Círculo">⚪</button>
+          <button class="herramienta" data-herramienta="sello" title="Sello">⭐</button>
+          <button class="herramienta" data-herramienta="texto" title="Texto">🔤</button>
+          <button class="herramienta" data-herramienta="imagen" title="Imagen">🖼️</button>
+          <button class="herramienta" data-herramienta="seleccion" title="Seleccionar y mover">👆</button>
+        </div>
+        <p class="ayuda">👆 Selecciona un texto, sello o imagen y arrástralo para moverlo. La tecla Suprimir lo elimina.</p>
+
+        <h2>Color</h2>
+        <div class="grupo" id="paleta"></div>
+        <label class="campo">Personalizado
+          <input type="color" id="color-personalizado" value="#e63946">
+        </label>
+
+        <h2>Grosor</h2>
+        <input type="range" id="grosor" min="1" max="60" value="8">
+        <span id="grosor-valor">8</span> px
+
+        <h2>Sellos</h2>
+        <div class="grupo" id="sellos"></div>
+
+        <h2>Texto</h2>
+        <select id="fuente-texto">
+          <option value="Georgia, serif">Clásica</option>
+          <option value="'Comic Sans MS', 'Comic Neue', cursive">Divertida</option>
+          <option value="'Trebuchet MS', sans-serif">Moderna</option>
+          <option value="'Courier New', monospace">Máquina de escribir</option>
+        </select>
+        <label class="campo">Tamaño: <span id="tam-texto-valor">40</span> px
+          <input type="range" id="tam-texto" min="12" max="150" value="40">
+        </label>
+        <p class="ayuda">Elige 🔤, haz clic en el dibujo, escribe y pulsa Enter.</p>
+
+        <h2>Imágenes</h2>
+        <button id="btn-subir-imagen">📂 Subir imagen</button>
+        <input type="file" id="archivo-imagen" accept="image/*" multiple hidden>
+        <label class="campo">Tamaño: <span id="tam-imagen-valor">180</span> px
+          <input type="range" id="tam-imagen" min="30" max="700" value="180">
+        </label>
+        <div class="grupo catalogo" id="catalogo-imagenes"></div>
+        <p class="ayuda" id="catalogo-vacio">Aún no hay imágenes en el catálogo. Sube una o agrégalas en la carpeta <code>img/</code> (ver <code>js/catalogo.js</code>).</p>
+        <p class="aviso" id="aviso-imagenes" role="status"></p>
+
+        <h2>Acciones</h2>
+        <div class="grupo acciones">
+          <button id="btn-deshacer">↩️ Deshacer</button>
+          <button id="btn-rehacer">↪️ Rehacer</button>
+          <button id="btn-eliminar-seleccion">❌ Quitar objeto</button>
+          <button id="btn-limpiar">🗑️ Limpiar</button>
+          <button id="btn-guardar-png">💾 Guardar PNG</button>
+        </div>
+      </aside>
+
+      <div class="area-lienzo">
+        <div class="contenedor-lienzo" id="contenedor-lienzo">
+          <canvas id="lienzo" width="900" height="600"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== VISTA: ESCRITURA ===================== -->
+    <section id="vista-escritura" class="vista">
+      <aside class="panel-herramientas">
+        <h2>Ideas para empezar</h2>
+        <p class="ayuda">Pulsa el botón para recibir una idea al azar.</p>
+        <button id="btn-idea">🎲 Dame una idea</button>
+        <div id="idea" class="idea"></div>
+
+        <h2>Plantillas</h2>
+        <div id="plantillas" class="grupo columna"></div>
+
+        <h2>Dibujos</h2>
+        <p class="ayuda">Inserta un dibujo tuyo en la historia.</p>
+        <button id="btn-insertar-dibujo">🖼️ Insertar dibujo del lienzo</button>
+      </aside>
+
+      <div class="area-editor">
+        <input type="text" id="titulo-historia" placeholder="Título de tu historia…">
+        <div class="barra-editor">
+          <button data-cmd="bold" title="Negrita"><b>N</b></button>
+          <button data-cmd="italic" title="Cursiva"><i>K</i></button>
+          <button data-cmd="underline" title="Subrayado"><u>S</u></button>
+          <select id="fuente">
+            <option value="Georgia, serif">Clásica</option>
+            <option value="'Comic Sans MS', 'Comic Neue', cursive">Divertida</option>
+            <option value="'Trebuchet MS', sans-serif">Moderna</option>
+          </select>
+          <select id="tamano">
+            <option value="16px">Normal</option>
+            <option value="20px">Grande</option>
+            <option value="26px">Enorme</option>
+          </select>
+          <span class="separador"></span>
+          <button id="btn-leer">🔊 Leer en voz alta</button>
+          <button id="btn-parar">⏹️ Parar</button>
+          <span class="separador"></span>
+          <button id="btn-guardar-historia">💾 Guardar</button>
+          <button id="btn-exportar-txt">📄 Exportar .txt</button>
+          <button id="btn-imprimir">🖨️ Imprimir</button>
+        </div>
+        <div id="editor" contenteditable="true" spellcheck="true"
+             data-placeholder="Había una vez…"></div>
+        <p id="estado-historia" class="estado"></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/almacenamiento.js"></script>
+  <script src="js/catalogo.js"></script>
+  <script src="js/dibujo.js"></script>
+  <script src="js/escritura.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
